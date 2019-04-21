@@ -15,14 +15,14 @@
 
 .DESCRIPTION 
 	This script will download the latest version of File Stream For 
-	Drive from Google's website. Then FileStream is installed silently 
-	and script removes downloaded files.
+    Drive from Google's website. Then FileStream is installed silently 
+    and script removes downloaded files.
 
 .RELATED LINKS
 	https://www.github.com/azusapacificuniversity/scripts
 
 .EXAMPLE 
-	[PS] C:\>.\Install-Google-FileStream-Silent.ps1
+	[PS] C:\>.\Install-Google-File-Stream-Silent.ps1
 #>
 
 # Set Some Variables:
@@ -30,21 +30,19 @@ $Source = "https://dl.google.com/drive-file-stream/GoogleDriveFSSetup.exe"
 $Path = "C:\Windows\Installers\"
 $Installer = "GoogleDriveFSSetup.exe"
 
-# Check if Path exists, and if not create it. 
+# Check if $Path exists if not create it
 if (Test-Path -Path $Path -PathType Container)
 { Write-Host "$Path already exists"}
 else
-{ 
-    New-Item -Path $Path  -ItemType directory 
-    Write-Host "Created $Path"
-}
+{ Wite-Host "Creating $Path" ; New-Item -Path $Path  -ItemType directory }
 
-# Download the Installer
+# Download the Installer. Added $ProgressPreference line in order to speed up download.
 Write-Host "Downloading $Installer"
+$ProgressPreference = 'SilentlyContinue'
 Invoke-WebRequest "$Source" -OutFile $Path$($Installer)
 
 # Install FileStream
-Write-Host "Starting Install."
+Write-Host "Installing $Installer"
 Start-Process -FilePath $Path$($Installer) -Args "--silent" -Verb RunAs -Wait
 
 # Cleanup
